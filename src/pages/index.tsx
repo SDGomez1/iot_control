@@ -11,20 +11,17 @@ export default function Page() {
   const [isConected, setIsConected] = useState(false);
 
   useEffect(() => {
-    if (isConected) {
-      console.log("conected");
-      setInterval(() => {
-        readcommands.mutateAsync().then((data) => {
-          data;
-          console.log(data);
-          if (data.length > 0) {
-            console.log("entra");
-            writeToPort(selectedPort, data[0].command);
-            deleteCommands.mutate();
-          }
-        });
-      }, 5000);
-    }
+    setInterval(() => {
+      readcommands.mutateAsync().then((data) => {
+        data;
+        console.log(data);
+        if (data.length > 0) {
+          console.log("entra");
+          writeToPort(selectedPort, data[0].command);
+          deleteCommands.mutate();
+        }
+      });
+    }, 5000);
   }, []);
 
   return (
