@@ -1,3 +1,4 @@
+import { writeToPort } from "@/inc/SerialFunction";
 import { trpc } from "../utils/trpc";
 
 export default function User() {

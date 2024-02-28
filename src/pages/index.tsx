@@ -10,19 +10,30 @@ export default function Page() {
   const deleteCommands = trpc.admin.delete.useMutation();
   const [isConected, setIsConected] = useState(false);
 
+  const [contador, setContador] = useState(0);
+
   useEffect(() => {
-    setInterval(() => {
+    const intervalo = setInterval(() => {
+      // Incrementa el contador cada 5 segundos
+      setContador((contador) => contador + 1);
+    }, 5000); // 5000 milisegundos = 5 segundos
+
+    return () => clearInterval(intervalo); // Limpia el intervalo al desmontar el componente
+  }, []);
+
+  useEffect(() => {
+    if (isConected) {
       readcommands.mutateAsync().then((data) => {
         data;
         console.log(data);
         if (data.length > 0) {
-          console.log("entra");
+          console.log(data[0].command);
           writeToPort(selectedPort, data[0].command);
           deleteCommands.mutate();
         }
       });
-    }, 5000);
-  }, []);
+    }
+  }, [contador, isConected]);
 
   return (
     <div>
@@ -45,7 +56,6 @@ export default function Page() {
                 if (value) {
                   setSelectedPort(value);
                   setIsConected(true);
-                  console.log(isConected);
                 }
               })
               .catch((error) => console.log(error));
@@ -54,6 +64,13 @@ export default function Page() {
           Conectar
         </button>
       )}
+      <button
+        onClick={() => {
+          writeToPort(selectedPort, "A");
+        }}
+      >
+        Prender en comando led
+      </button>
     </div>
   );
 }
