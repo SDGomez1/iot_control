@@ -11,7 +11,7 @@ const nextApiHandler = createNextApiHandler({
   createContext: createTRPCContext,
 });
 
-const allowedOrigins = ["https://iot-control.vercel.app/"];
+const allowedOrigins = ["https://iot-control.vercel.app/user"];
 
 const corsOptions = {
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
