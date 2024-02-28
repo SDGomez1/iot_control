@@ -1,13 +1,31 @@
-"use client";
-
-import { connectToSerial, writeToPort, closePort } from "./SerialFunction";
-import { useState } from "react";
+import { connectToSerial, writeToPort, closePort } from "../inc/SerialFunction";
+import { useEffect, useState } from "react";
+import { trpc } from "../utils/trpc";
 
 export default function Page() {
   const [selectedPort, setSelectedPort] = useState<SerialPort | undefined>(
     undefined
   );
+  const readcommands = trpc.admin.read.useMutation();
+  const deleteCommands = trpc.admin.delete.useMutation();
   const [isConected, setIsConected] = useState(false);
+
+  useEffect(() => {
+    if (isConected) {
+      console.log("conected");
+      setInterval(() => {
+        readcommands.mutateAsync().then((data) => {
+          data;
+          console.log(data);
+          if (data.length > 0) {
+            console.log("entra");
+            writeToPort(selectedPort, data[0].command);
+            deleteCommands.mutate();
+          }
+        });
+      }, 5000);
+    }
+  }, []);
 
   return (
     <div>
@@ -30,6 +48,7 @@ export default function Page() {
                 if (value) {
                   setSelectedPort(value);
                   setIsConected(true);
+                  console.log(isConected);
                 }
               })
               .catch((error) => console.log(error));
@@ -38,21 +57,6 @@ export default function Page() {
           Conectar
         </button>
       )}
-
-      <button
-        onClick={() =>
-          writeToPort(selectedPort, "A").catch((e) => console.log(e))
-        }
-      >
-        Prender led
-      </button>
-      <button
-        onClick={() =>
-          writeToPort(selectedPort, "S").catch((e) => console.log(e))
-        }
-      >
-        Apagar led
-      </button>
     </div>
   );
 }

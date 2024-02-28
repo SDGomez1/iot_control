@@ -7,7 +7,8 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
+    "strictNullChecks": true,
     "noEmit": true,
     "incremental": true,
     "esModuleInterop": true,
@@ -20,7 +21,13 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@routers/*": ["./src/server/api/routers/*"],
+      "@trpcApi/*": ["./src/server/api/*"],
+
+    }
   },
   "include": [
     "next-env.d.ts",
